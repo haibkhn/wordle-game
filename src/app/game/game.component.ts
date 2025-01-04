@@ -155,15 +155,18 @@ export class GameComponent implements OnInit {
   }
 
   private animateGuess() {
-    for (let i = 0; i < 5; i++) {
-      setTimeout(() => {
-        this.flipStates[this.currentRow][i] = true;
-      }, i * 300);
-    }
-
+    // Add small initial delay before starting animations
     setTimeout(() => {
-      this.checkGameState();
-    }, 1500);
+      for (let i = 0; i < 5; i++) {
+        setTimeout(() => {
+          this.flipStates[this.currentRow][i] = true;
+        }, i * 300);
+      }
+
+      setTimeout(() => {
+        this.checkGameState();
+      }, 1500);
+    }, 50); // Small initial delay
   }
 
   private checkGameState() {
