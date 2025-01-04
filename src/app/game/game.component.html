@@ -1,0 +1,41 @@
+<div class="game-container" (window:keyup)="onKeyup($event)">
+  <h1 class="title">Wordle</h1>
+  <div class="notification" [class.show]="showNotification">
+    {{ notificationMessage }}
+  </div>
+  <div class="grid">
+    <div class="row" *ngFor="let guess of guesses; let i = index">
+      <div
+        class="tile"
+        [class.flip]="shouldFlip(i, j)"
+        [class.shake]="shouldShake(i)"
+        *ngFor="let _ of [0, 1, 2, 3, 4]; let j = index"
+      >
+        <div class="tile-content tile-front">
+          {{ i === currentRow ? currentGuess[j] || "" : guess[j] || "" }}
+        </div>
+        <div
+          class="tile-content tile-back"
+          [style.--background-color]="getBackgroundColor(i, j)"
+        >
+          {{ guesses[i][j] || "" }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add keyboard here -->
+  <div class="keyboard">
+    <div class="keyboard-row" *ngFor="let row of keyboard">
+      <button
+        *ngFor="let key of row"
+        class="keyboard-key"
+        [class.wide-key]="key === 'ENTER' || key === '⌫'"
+        [style.background-color]="keyboardLetterStates[key] || '#d3d6da'"
+        (click)="onKeyPress(key)"
+      >
+        {{ key }}
+      </button>
+    </div>
+  </div>
+</div>
