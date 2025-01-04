@@ -1,5 +1,11 @@
 <div class="game-container">
   <h1 class="title">Wordle</h1>
+  <app-game-over-modal
+    *ngIf="showGameOverModal"
+    [isWin]="isWin"
+    [word]="word"
+    (playAgain)="onPlayAgain()"
+  ></app-game-over-modal>
   <div class="notification" [class.show]="showNotification">
     {{ notificationMessage }}
   </div>

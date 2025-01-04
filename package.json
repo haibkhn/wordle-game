@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:wordle-game": "node dist/wordle-game/server/server.mjs"
+    "serve:ssr:wordle-game": "node dist/wordle-game/server/server.mjs",
+    "deploy": "ng build --base-href=/wordle-game/ && npx gh-pages -d dist/wordle-game/browser"
   },
   "private": false,
   "dependencies": {
@@ -34,6 +35,7 @@
     "@types/jasmine": "~5.1.0",
     "@types/node": "^18.18.0",
     "angular-cli-ghpages": "^2.0.3",
+    "gh-pages": "^6.3.0",
     "jasmine-core": "~5.4.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",

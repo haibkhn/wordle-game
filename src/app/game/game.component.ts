@@ -7,13 +7,15 @@ import {
   HttpClientModule,
   provideHttpClient,
 } from '@angular/common/http';
+import { GameOverModalComponent } from '../components/game-over-modal/game-over-modal.component';
+import { GameState } from '../models/game-state';
 
 @Injectable({
   providedIn: 'root',
 })
 @Component({
   selector: 'app-game',
-  imports: [CommonModule, HttpClientModule],
+  imports: [CommonModule, HttpClientModule, GameOverModalComponent],
   templateUrl: './game.component.html',
   styleUrl: './game.component.css',
   standalone: true,
@@ -43,6 +45,9 @@ export class GameComponent implements OnInit {
   showNotification = false;
   shakingRow: number | null = null;
   notificationMessage = '';
+
+  showGameOverModal = false;
+  isWin = false;
 
   constructor(private wordService: WordService) {}
 
@@ -132,10 +137,14 @@ export class GameComponent implements OnInit {
     setTimeout(() => {
       if (this.currentGuess === this.word) {
         this.gameOver = true;
-        alert('You won!');
+        // alert('You won!');
+        this.isWin = true;
+        this.showGameOverModal = true;
       } else if (this.currentRow === 5) {
         this.gameOver = true;
-        alert('Game Over! The word was ' + this.word);
+        this.showGameOverModal = true;
+        this.isWin = false;
+        // alert('Game Over! The word was ' + this.word);
       } else {
         this.currentRow++;
         this.currentGuess = '';
@@ -252,6 +261,37 @@ export class GameComponent implements OnInit {
       this.currentGuess = this.currentGuess.slice(0, -1);
     } else if (this.currentGuess.length < 5 && /^[a-zA-Z]$/.test(event.key)) {
       this.currentGuess += event.key.toUpperCase();
+    }
+  }
+
+  onPlayAgain() {
+    this.restartGame();
+  }
+
+  async restartGame() {
+    // Reset all game states
+    this.currentGuess = '';
+    this.currentRow = 0;
+    this.gameOver = false;
+    this.showGameOverModal = false;
+    this.isWin = false;
+    this.guesses = Array(6).fill('');
+
+    // Reset flip states for tiles
+    this.flipStates = Array.from({ length: 6 }, () =>
+      Array.from({ length: 5 }, () => false)
+    );
+
+    // Reset keyboard colors
+    this.keyboardLetterStates = {};
+
+    // Get new word
+    try {
+      this.word = await this.wordService.getRandomWord();
+      console.log('New word to guess:', this.word); // For testing
+    } catch (error) {
+      console.error('Error getting new word:', error);
+      this.showError('Error starting new game');
     }
   }
 }

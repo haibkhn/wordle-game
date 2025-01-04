@@ -1,0 +1,7 @@
+<div class="modal-overlay">
+  <div class="modal">
+    <h2>{{ isWin ? "Congratulations!" : "Game Over" }}</h2>
+    <p>{{ isWin ? "You found the word!" : "The word was: " + word }}</p>
+    <button class="play-again-btn" (click)="onPlayAgain()">Play Again</button>
+  </div>
+</div>
