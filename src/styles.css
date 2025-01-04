@@ -5,6 +5,13 @@
   font-family: 'Libre Franklin', 'Franklin Gothic Medium', Arial, sans-serif;
 }
 
+* {
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 body {
   background-color: black;
   margin: 0;
