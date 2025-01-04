@@ -1,0 +1,63 @@
+.tile {
+    width: min(60px, 12vw); /* responsive width */
+    height: min(60px, 12vw); /* responsive height */
+    border: 0.5px solid #3a3a3c;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    transform-style: preserve-3d;
+    transition: transform 0.6s ease;
+    position: relative;
+    color: white;
+  }
+
+  .tile.flip {
+    transform: rotateX(180deg);
+  }
+
+  .tile-content {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    text-transform: uppercase;
+  }
+
+  .tile-front {
+    background: transparent;
+    border: 0.5px solid #3a3a3c; 
+    color: white;
+  }
+
+  .tile-back {
+    background: var(--background-color);
+    border: 2px solid var(--background-color);
+    transform: rotateX(180deg);
+    color: white;
+  }
+
+  @keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(5px); }
+    50% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+    100% { transform: translateX(0); }
+  }
+
+  .tile.shake {
+    animation: shake 0.5s;
+  }
+  
+  /* When both shake and flip are active, prioritize flip */
+  .tile.shake.flip {
+    animation: none;
+    transform: rotateX(180deg);
+  }

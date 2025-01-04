@@ -1,0 +1,13 @@
+<div class="keyboard">
+  <div class="keyboard-row" *ngFor="let row of keyboard">
+    <button
+      *ngFor="let key of row"
+      class="keyboard-key"
+      [class.wide-key]="key === 'ENTER' || key === '⌫'"
+      [style.background-color]="keyboardStates[key] || '#818384'"
+      (click)="onKeyClick(key)"
+    >
+      {{ key }}
+    </button>
+  </div>
+</div>

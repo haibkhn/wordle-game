@@ -1,47 +1,30 @@
 <div class="game-container">
   <h1 class="title">Wordle</h1>
+
   <app-game-over-modal
     *ngIf="showGameOverModal"
     [isWin]="isWin"
     [word]="word"
     (playAgain)="onPlayAgain()"
   ></app-game-over-modal>
-  <div class="notification" [class.show]="showNotification">
-    {{ notificationMessage }}
-  </div>
-  <div class="grid">
-    <div class="row" *ngFor="let guess of guesses; let i = index">
-      <div
-        class="tile"
-        [class.flip]="shouldFlip(i, j)"
-        [class.shake]="shouldShake(i)"
-        *ngFor="let _ of [0, 1, 2, 3, 4]; let j = index"
-      >
-        <div class="tile-content tile-front">
-          {{ i === currentRow ? currentGuess[j] || "" : guess[j] || "" }}
-        </div>
-        <div
-          class="tile-content tile-back"
-          [style.--background-color]="getBackgroundColor(i, j)"
-        >
-          {{ guesses[i][j] || "" }}
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- Add keyboard here -->
-  <div class="keyboard">
-    <div class="keyboard-row" *ngFor="let row of keyboard">
-      <button
-        *ngFor="let key of row"
-        class="keyboard-key"
-        [class.wide-key]="key === 'ENTER' || key === '⌫'"
-        [style.background-color]="keyboardLetterStates[key] || '#d3d6da'"
-        (click)="onKeyPress(key)"
-      >
-        {{ key }}
-      </button>
-    </div>
-  </div>
+  <app-notification
+    [message]="notificationMessage"
+    [show]="showNotification"
+  ></app-notification>
+
+  <app-game-board
+    [guesses]="guesses"
+    [currentGuess]="currentGuess"
+    [currentRow]="currentRow"
+    [flipStates]="flipStates"
+    [shakingRow]="shakingRow"
+    [word]="word"
+  ></app-game-board>
+
+  <app-virtual-keyboard
+    [keyboard]="keyboard"
+    [keyboardStates]="keyboardLetterStates"
+    (keyPress)="onKeyPress($event)"
+  ></app-virtual-keyboard>
 </div>

@@ -1,0 +1,12 @@
+<div class="grid">
+  <div class="row" *ngFor="let guess of guesses; let i = index">
+    <app-game-tile
+      *ngFor="let _ of [0, 1, 2, 3, 4]; let j = index"
+      [letter]="i === currentRow ? currentGuess[j] || '' : guess[j] || ''"
+      [isFlipped]="flipStates[i][j]"
+      [shouldShake]="shakingRow === i"
+      [backgroundColor]="getBackgroundColor(i, j)"
+    >
+    </app-game-tile>
+  </div>
+</div>

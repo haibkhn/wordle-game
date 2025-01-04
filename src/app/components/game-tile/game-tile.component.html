@@ -1,0 +1,11 @@
+<div class="tile" [class.flip]="isFlipped" [class.shake]="shouldShake">
+  <div class="tile-content tile-front">
+    {{ letter }}
+  </div>
+  <div
+    class="tile-content tile-back"
+    [style.--background-color]="backgroundColor"
+  >
+    {{ letter }}
+  </div>
+</div>

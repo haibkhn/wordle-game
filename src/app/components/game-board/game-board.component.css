@@ -1,0 +1,10 @@
+.grid {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .row {
+    display: flex;
+    gap: 5px;
+  }
