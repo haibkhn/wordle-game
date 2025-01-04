@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { WordService } from '../services/word.service';
@@ -215,6 +215,43 @@ export class GameComponent implements OnInit {
       ) {
         this.keyboardLetterStates[letter] = color;
       }
+    }
+  }
+
+  @HostListener('window:keyup', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    // Return early if game is over or if it's a special key event
+    if (
+      this.gameOver ||
+      event.ctrlKey ||
+      event.altKey ||
+      event.metaKey ||
+      event.key.startsWith('F') || // Blocks F1-F12
+      event.key === 'Tab' ||
+      event.key === 'CapsLock' ||
+      event.key === 'Shift' ||
+      event.key === 'Control' ||
+      event.key === 'Alt' ||
+      event.key === 'Meta' ||
+      event.key === 'Delete' ||
+      event.key === 'Home' ||
+      event.key === 'End' ||
+      event.key === 'PageUp' ||
+      event.key === 'PageDown' ||
+      event.key === 'ArrowLeft' ||
+      event.key === 'ArrowRight' ||
+      event.key === 'ArrowUp' ||
+      event.key === 'ArrowDown'
+    ) {
+      return;
+    }
+
+    if (event.key === 'Enter') {
+      this.submitGuess();
+    } else if (event.key === 'Backspace') {
+      this.currentGuess = this.currentGuess.slice(0, -1);
+    } else if (this.currentGuess.length < 5 && /^[a-zA-Z]$/.test(event.key)) {
+      this.currentGuess += event.key.toUpperCase();
     }
   }
 }
