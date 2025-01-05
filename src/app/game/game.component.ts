@@ -20,7 +20,6 @@ import { GameHeaderComponent } from '../components/game-header/game-header.compo
     GameBoardComponent,
     VirtualKeyboardComponent,
     NotificationComponent,
-    RouterLink,
     GameHeaderComponent,
   ],
   templateUrl: './game.component.html',
