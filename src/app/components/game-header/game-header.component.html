@@ -15,6 +15,11 @@
       >
         Create Custom Game
       </button>
+      <button class="menu-item" (click)="showHowToPlay()">How to Play</button>
     </div>
   </div>
+  <app-how-to-play
+    *ngIf="showingHowToPlay"
+    (close)="showingHowToPlay = false"
+  ></app-how-to-play>
 </header>
