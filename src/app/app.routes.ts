@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { GameComponent } from './game/game.component';
 import { CreateGameComponent } from './components/create-game/create-game.component';
+import { RenderMode } from '@angular/ssr';
 
 export const routes: Routes = [
   {
@@ -8,5 +9,11 @@ export const routes: Routes = [
     component: GameComponent,
   },
   { path: 'create', component: CreateGameComponent },
-  { path: 'play/:id', component: GameComponent },
+  {
+    path: 'play/:id',
+    component: GameComponent,
+    data: {
+      RenderMode: 'client',
+    },
+  },
 ];
