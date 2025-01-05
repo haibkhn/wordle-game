@@ -34,7 +34,7 @@ export class CreateGameComponent {
   createGame() {
     if (!this.isValidWord) return;
     const hash = this.wordEncryption.encryptWord(this.customWord);
-    this.gameLink = `${window.location.origin}/play/${hash}`;
+    this.gameLink = `${window.location.origin}/wordle-game/play/${hash}`;
   }
 
   copyLink() {
