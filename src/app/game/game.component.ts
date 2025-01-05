@@ -63,16 +63,17 @@ export class GameComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe((params) => {
       if (params['id']) {
-        // Custom word mode
+        console.log('Received params id:', params['id']);
         const decryptedWord = this.wordEncryption.decryptWord(params['id']);
         if (decryptedWord) {
+          console.log('Setting word to:', decryptedWord);
           this.word = decryptedWord;
           this.loading = false;
         } else {
           this.showError('Invalid game link');
         }
       } else {
-        // Random word mode
+        console.log('No params id, initializing random game');
         this.initializeGame();
       }
     });

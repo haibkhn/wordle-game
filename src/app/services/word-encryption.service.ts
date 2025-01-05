@@ -5,13 +5,18 @@ import { Injectable } from '@angular/core';
 })
 export class WordEncryptionService {
   encryptWord(word: string): string {
-    return btoa(word.toUpperCase());
+    const encrypted = btoa(word.toUpperCase());
+    console.log('Encrypting:', word, 'to:', encrypted);
+    return encrypted;
   }
 
   decryptWord(hash: string): string {
     try {
-      return atob(hash).toUpperCase();
+      const decrypted = atob(hash).toUpperCase();
+      console.log('Decrypting:', hash, 'to:', decrypted);
+      return decrypted;
     } catch {
+      console.error('Failed to decrypt:', hash);
       return '';
     }
   }

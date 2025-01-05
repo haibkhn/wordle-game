@@ -34,7 +34,14 @@ export class CreateGameComponent {
   createGame() {
     if (!this.isValidWord) return;
     const hash = this.wordEncryption.encryptWord(this.customWord);
-    this.gameLink = `${window.location.origin}/wordle-game/play/${hash}`;
+    // Create URL with hash routing
+    this.gameLink = `${window.location.origin}/wordle-game/#/play/${hash}`;
+  }
+
+  playGame() {
+    const hash = this.wordEncryption.encryptWord(this.customWord);
+    // Use router navigation
+    this.router.navigate(['play', hash]);
   }
 
   copyLink() {
@@ -42,10 +49,5 @@ export class CreateGameComponent {
       this.showCopied = true;
       setTimeout(() => (this.showCopied = false), 2000);
     });
-  }
-
-  playGame() {
-    const hash = this.wordEncryption.encryptWord(this.customWord);
-    this.router.navigate(['/play', hash]);
   }
 }
