@@ -1,0 +1,74 @@
+.header {
+  width: 100%;
+  padding: 1rem;
+  position: relative;  /* Add this */
+}
+
+.header-content {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 0 48px;  /* Add padding to make space for the menu button */
+}
+
+.menu-btn {
+  position: absolute;
+  left: 10px;  /* Adjust this */
+  top: 50%;    /* Add this */
+  transform: translateY(-50%);  /* Add this */
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  z-index: 1;  /* Add this */
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin: 0;
+  color: white;
+  flex: 1;      /* Add this */
+  text-align: center;  /* Add this */
+}
+
+.menu-overlay {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background: rgba(0, 0, 0, 0.5);
+z-index: 100;
+display: flex;
+justify-content: flex-start;
+}
+
+.menu {
+background: black;
+padding: 1rem;
+width: 250px;
+height: 100%;
+border-right: 1px solid #3a3a3c;
+}
+
+.menu-item {
+width: 100%;
+padding: 1rem;
+background: none;
+border: none;
+color: white;
+text-align: left;
+cursor: pointer;
+border-radius: 4px;
+}
+
+.menu-item:hover {
+background: #3a3a3c;
+}

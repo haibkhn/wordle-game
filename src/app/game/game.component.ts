@@ -6,6 +6,9 @@ import { GameOverModalComponent } from '../components/game-over-modal/game-over-
 import { GameBoardComponent } from '../components/game-board/game-board.component';
 import { VirtualKeyboardComponent } from '../components/virtual-keyboard/virtual-keyboard.component';
 import { NotificationComponent } from '../components/notification/notification.component';
+import { WordEncryptionService } from '../services/word-encryption.service';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { GameHeaderComponent } from '../components/game-header/game-header.component';
 
 @Component({
   selector: 'app-game',
@@ -17,6 +20,8 @@ import { NotificationComponent } from '../components/notification/notification.c
     GameBoardComponent,
     VirtualKeyboardComponent,
     NotificationComponent,
+    RouterLink,
+    GameHeaderComponent,
   ],
   templateUrl: './game.component.html',
   styleUrl: './game.component.css',
@@ -50,10 +55,28 @@ export class GameComponent implements OnInit {
 
   keyboardLetterStates: { [key: string]: string } = {};
 
-  constructor(private wordService: WordService) {}
+  constructor(
+    private wordService: WordService,
+    private wordEncryption: WordEncryptionService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit() {
-    this.initializeGame();
+    this.route.params.subscribe((params) => {
+      if (params['id']) {
+        // Custom word mode
+        const decryptedWord = this.wordEncryption.decryptWord(params['id']);
+        if (decryptedWord) {
+          this.word = decryptedWord;
+          this.loading = false;
+        } else {
+          this.showError('Invalid game link');
+        }
+      } else {
+        // Random word mode
+        this.initializeGame();
+      }
+    });
   }
 
   async initializeGame() {
@@ -136,6 +159,12 @@ export class GameComponent implements OnInit {
   async submitGuess() {
     if (this.currentGuess.length !== 5) {
       this.showError('Not enough letters');
+      return;
+    }
+
+    // If it's the correct custom word, accept it immediately
+    if (this.route.snapshot.params['id'] && this.currentGuess === this.word) {
+      this.processValidGuess();
       return;
     }
 
@@ -228,7 +257,13 @@ export class GameComponent implements OnInit {
   }
 
   onPlayAgain() {
-    this.restartGame();
+    if (this.route.snapshot.params['id']) {
+      // If it's a custom game, just reset the state but keep the same word
+      this.resetGameState();
+    } else {
+      // For random word game, get new word
+      this.restartGame();
+    }
   }
 
   async restartGame() {

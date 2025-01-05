@@ -1,0 +1,20 @@
+<header class="header">
+  <div class="header-content">
+    <button class="menu-btn" (click)="toggleMenu()">☰</button>
+    <h1 class="title">Wordle</h1>
+  </div>
+  <div class="menu-overlay" *ngIf="isMenuOpen" (click)="closeMenu()">
+    <div class="menu" (click)="$event.stopPropagation()">
+      <button class="menu-item" [routerLink]="['/']" (click)="closeMenu()">
+        Random Word Game
+      </button>
+      <button
+        class="menu-item"
+        [routerLink]="['/create']"
+        (click)="closeMenu()"
+      >
+        Create Custom Game
+      </button>
+    </div>
+  </div>
+</header>

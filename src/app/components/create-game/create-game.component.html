@@ -1,0 +1,34 @@
+<div class="create-container">
+  <h1 class="title">Create Custom Game</h1>
+
+  <div class="input-container">
+    <input
+      type="text"
+      [(ngModel)]="customWord"
+      (input)="onWordInput()"
+      maxlength="5"
+      placeholder="Enter 5-letter word"
+      class="word-input"
+    />
+    <div class="error" *ngIf="error">{{ error }}</div>
+  </div>
+
+  <div class="buttons">
+    <button (click)="createGame()" [disabled]="!isValidWord" class="create-btn">
+      Create Link
+    </button>
+    <button (click)="playGame()" [disabled]="!isValidWord" class="play-btn">
+      Test Game
+    </button>
+  </div>
+
+  <div class="link-container" *ngIf="gameLink">
+    <p>Share this link with friends:</p>
+    <div class="link-box">
+      <input [value]="gameLink" readonly class="link-input" />
+      <button (click)="copyLink()" class="copy-btn">
+        {{ showCopied ? "Copied!" : "Copy" }}
+      </button>
+    </div>
+  </div>
+</div>
