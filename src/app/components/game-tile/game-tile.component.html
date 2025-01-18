@@ -1,4 +1,9 @@
-<div class="tile" [class.flip]="isFlipped" [class.shake]="shouldShake">
+<div
+  class="tile"
+  [class.flip]="isFlipped"
+  [class.shake]="shouldShake"
+  [class.pop]="shouldPop"
+>
   <div class="tile-content tile-front">
     {{ letter }}
   </div>

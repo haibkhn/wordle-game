@@ -16,6 +16,7 @@ export class GameBoardComponent {
   @Input() flipStates: boolean[][] = [];
   @Input() shakingRow: number | null = null;
   @Input() word: string = '';
+  @Input() doNotPop: boolean = false;
 
   getBackgroundColor(row: number, col: number): string {
     if (this.guesses[row].length !== 5) return 'transparent'; // Changed from white to transparent
@@ -47,5 +48,16 @@ export class GameBoardComponent {
     }
 
     return '#3a3a3c'; // Changed to #3a3a3c for unused letters
+  }
+
+  shouldPop(row: number, col: number): boolean {
+    if (row !== this.currentRow) return false;
+    if (col !== this.currentGuess.length - 1) return false; // Current letter being typed
+    if (this.currentGuess[col] === undefined) return false;
+    if (this.flipStates[row][col]) return false;
+    if (this.shakingRow === row) return false;
+    if (this.doNotPop) return false; // Prevent pop during animations
+
+    return true;
   }
 }

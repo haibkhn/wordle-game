@@ -16,6 +16,7 @@
 
   .tile.flip {
     transform: rotateX(180deg);
+    animation: none;  /* Cancel any other animations when flipping */
   }
 
   .tile-content {
@@ -61,3 +62,37 @@
     animation: none;
     transform: rotateX(180deg);
   }
+
+  @keyframes pop {
+    0% { 
+      transform: scale(1); 
+    }
+    50% { 
+      transform: scale(1.1); 
+    }
+    100% { 
+      transform: scale(1); 
+    }
+  }
+
+  .tile.pop {
+    animation: pop 0.1s ease-in-out;
+  }
+
+  .tile.pop:not(.flip):not(.shake) {
+    animation: pop 0.1s ease-in-out;
+  }
+  
+  .tile.shake:not(.flip) {
+    animation: shake 0.5s;
+  }
+
+  .tile.shake, 
+.tile.shake ~ .tile {
+  animation: shake 0.5s !important;  /* Use !important to override pop */
+}
+
+/* Modify the existing pop rule to be more specific */
+.tile.pop:not(.shake):not(.flip):not([data-shake-cooldown="true"]) {
+  animation: pop 0.1s ease-in-out;
+}

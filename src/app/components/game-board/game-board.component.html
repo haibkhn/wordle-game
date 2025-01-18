@@ -6,6 +6,7 @@
       [isFlipped]="flipStates[i][j]"
       [shouldShake]="shakingRow === i"
       [backgroundColor]="getBackgroundColor(i, j)"
+      [shouldPop]="shouldPop(i, j)"
     >
     </app-game-tile>
   </div>

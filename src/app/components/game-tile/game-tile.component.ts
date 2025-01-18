@@ -13,4 +13,5 @@ export class GameTileComponent {
   @Input() isFlipped: boolean = false;
   @Input() shouldShake: boolean = false;
   @Input() backgroundColor: string = 'transparent';
+  @Input() shouldPop: boolean = false;
 }

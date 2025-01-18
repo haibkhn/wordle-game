@@ -40,6 +40,7 @@ export class GameComponent implements OnInit {
   notificationMessage = '';
   showGameOverModal = false;
   isWin = false;
+  doNotPop = false;
 
   // Game configuration
   flipStates: boolean[][] = Array.from({ length: 6 }, () =>
@@ -92,37 +93,61 @@ export class GameComponent implements OnInit {
     }
   }
 
-  private showError(message: string) {
+  private async showError(message: string): Promise<void> {
     this.notificationMessage = message;
     this.showNotification = true;
-    setTimeout(() => {
-      this.showNotification = false;
-    }, 1500);
+    this.doNotPop = true;
 
+    // Set the shaking row
     this.shakingRow = this.currentRow;
-    setTimeout(() => {
-      this.shakingRow = null;
-    }, 500);
+
+    // Add data attribute to all tiles in the row for shake cooldown
+    const tiles = document.querySelectorAll(
+      `.board-row[data-row="${this.currentRow}"] .tile`
+    );
+    tiles.forEach((tile) => tile.setAttribute('data-shake-cooldown', 'true'));
+
+    // Wait for shake animation
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    // Clear shake state
+    this.shakingRow = null;
+    this.showNotification = false;
+
+    // Add a small delay before removing cooldown
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    // Remove cooldown attribute
+    tiles.forEach((tile) => tile.removeAttribute('data-shake-cooldown'));
+
+    // Finally reset doNotPop
+    this.doNotPop = false;
   }
 
-  onKeyPress(key: string) {
+  async onKeyPress(key: string) {
     if (this.gameOver) return;
 
     if (key === '⌫') {
+      // this.doNotPop = true;
       this.currentGuess = this.currentGuess.slice(0, -1);
     } else if (key === 'ENTER') {
-      this.submitGuess();
+      this.doNotPop = true;
+      await this.submitGuess();
+      this.doNotPop = false;
     } else if (this.currentGuess.length < 5) {
+      // this.doNotPop = false;
       this.currentGuess += key;
     }
   }
 
   @HostListener('window:keyup', ['$event'])
-  handleKeyboardEvent(event: KeyboardEvent) {
+  async handleKeyboardEvent(event: KeyboardEvent) {
     if (this.gameOver || this.isSpecialKey(event)) return;
 
     if (event.key === 'Enter') {
-      this.submitGuess();
+      if (this.doNotPop) return; // Prevent multiple submissions during animations
+      this.doNotPop = true; // Block further pops during animations
+      await this.submitGuess(); // Handle guess submission and animations
     } else if (event.key === 'Backspace') {
       this.currentGuess = this.currentGuess.slice(0, -1);
     } else if (this.currentGuess.length < 5 && /^[a-zA-Z]$/.test(event.key)) {
@@ -158,44 +183,51 @@ export class GameComponent implements OnInit {
 
   async submitGuess() {
     if (this.currentGuess.length !== 5) {
-      this.showError('Not enough letters');
+      this.doNotPop = true;
+      await this.showError('Not enough letters');
+      this.doNotPop = false; // Reset after error handling is complete
       return;
     }
 
-    // If it's the correct custom word, accept it immediately
-    if (this.route.snapshot.params['id'] && this.currentGuess === this.word) {
-      this.processValidGuess();
+    const isValid = await this.wordService
+      .checkWord(this.currentGuess)
+      .toPromise();
+
+    if (!isValid) {
+      this.doNotPop = true;
+      await this.showError('Not in word list');
+      this.doNotPop = false; // Reset after error handling is complete
       return;
     }
 
-    this.wordService.checkWord(this.currentGuess).subscribe((isValid) => {
-      if (!isValid) {
-        this.showError('Not in word list');
-        return;
-      }
-      this.processValidGuess();
-    });
+    this.doNotPop = true;
+    await this.processValidGuess();
+    this.doNotPop = false;
   }
 
-  private processValidGuess() {
+  private async processValidGuess() {
     this.guesses[this.currentRow] = this.currentGuess;
     this.updateKeyboardStates();
-    this.animateGuess();
+    await this.animateGuess(); // Wait for animations to finish
   }
 
-  private animateGuess() {
-    // Add small initial delay before starting animations
-    setTimeout(() => {
-      for (let i = 0; i < 5; i++) {
-        setTimeout(() => {
-          this.flipStates[this.currentRow][i] = true;
-        }, i * 300);
-      }
-
+  private animateGuess(): Promise<void> {
+    return new Promise((resolve) => {
+      // Add small initial delay before starting animations
       setTimeout(() => {
-        this.checkGameState();
-      }, 1500);
-    }, 50); // Small initial delay
+        for (let i = 0; i < 5; i++) {
+          setTimeout(() => {
+            this.flipStates[this.currentRow][i] = true;
+          }, i * 300);
+        }
+
+        // Resolve promise after all animations finish
+        setTimeout(() => {
+          this.checkGameState();
+          resolve();
+        }, 1500); // Total animation time
+      }, 50); // Small initial delay
+    });
   }
 
   private checkGameState() {
